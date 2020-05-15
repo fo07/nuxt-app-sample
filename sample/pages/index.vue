@@ -21,7 +21,7 @@
           target="_blank"
           class="button--grey"
         >
-          GitHub
+          Git
         </a>
       </div>
     </div>

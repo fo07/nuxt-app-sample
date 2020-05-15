@@ -1,5 +1,8 @@
 
 export default {
+  env: {
+    apikey: '<<api key>>'
+  },
   mode: 'universal',
   /*
   ** Headers of the page
@@ -46,6 +49,13 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+    proxy: true
+  },
+  proxy: {
+    '/api': {
+      target: 'http://webservice.recruit.co.jp/hotpepper',
+      pathRewrite: { '^/api': '' } 
+    }
   },
   /*
   ** Build configuration

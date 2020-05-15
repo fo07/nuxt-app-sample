@@ -1,72 +1,43 @@
 <template>
-  <div class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-        sample
-      </h1>
-      <h2 class="subtitle">
-        My polished Nuxt.js project
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          Git
-        </a>
-      </div>
-    </div>
-  </div>
+  <section>
+    <h2>検索結果 （{{shops.length}}件）</h2>
+    <p v-if="error">データの取得に失敗しました</p>
+    <ul>
+      <li v-for="shop in shops" :key="shop.id">
+        <p>{{shop.id}}</p>
+        <p>{{shop.name}}</p>
+      </li>
+    </ul>
+  </section>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
 
 export default {
-  components: {
-    Logo
+  data(){
+    return {
+      shops: [],
+      error: false
+    }
+  },
+  methods: {
+    setShop(res) {
+      this.shops = res.data.results.shop
+    },
+    setError(err) {
+      console.log(err);
+      this.error = true
+    }
+  },
+  mounted() {
+    this.$axios('http://localhost:3000/api/gourmet/v1/', {
+      params: {
+        key: process.env.apikey,
+        lat: '35.681236',
+        lng: '139.767125',
+        format: 'json'
+      }
+    }).then(this.setShop).catch(this.setError)
   }
 }
 </script>
-
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-</style>

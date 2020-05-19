@@ -12,32 +12,36 @@
 </template>
 
 <script>
-
 export default {
-  data(){
+  layout: "test",
+  data() {
     return {
       shops: [],
       error: false
-    }
+    };
   },
   methods: {
     setShop(res) {
-      this.shops = res.data.results.shop
+      this.shops = res.data.results.shop;
     },
     setError(err) {
       console.log(err);
-      this.error = true
+      this.error = true;
     }
   },
   mounted() {
-    this.$axios('http://localhost:3000/api/gourmet/v1/', {
-      params: {
-        key: process.env.apikey,
-        lat: '35.681236',
-        lng: '139.767125',
-        format: 'json'
-      }
-    }).then(this.setShop).catch(this.setError)
+    navigator.geolocation.getCurrentPosition(position => {
+      this.$axios("http://localhost:3000/api/gourmet/v1/", {
+        params: {
+          key: process.env.apikey,
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+          format: "json"
+        }
+      })
+        .then(this.setShop)
+        .catch(this.setError);
+    }, this.setError);
   }
-}
+};
 </script>
